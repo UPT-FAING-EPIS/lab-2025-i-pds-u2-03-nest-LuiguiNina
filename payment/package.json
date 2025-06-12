@@ -1,9 +1,12 @@
 {
-  "name": "payment",
+  "name": "@upt-faing-epis/payment",
   "version": "0.0.1",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "description": "",
   "author": "",
-  "private": true,
+  "private": false,
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
