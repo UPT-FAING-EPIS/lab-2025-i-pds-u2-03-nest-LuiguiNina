@@ -1,0 +1,46 @@
+name: release_version
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Build payment_nina
+        run: |
+          cd payment
+          npm ci
+          npm run build
+
+      - name: Build atm_nina
+        run: |
+          cd ../atm
+          npm ci
+          npm run build
+
+      - name: Get current date and time
+        id: datetime
+        run: echo "datetime=$(date -u +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "Release ${{ steps.datetime.outputs.datetime }}"
+          tag_name: "release-${{ steps.datetime.outputs.datetime }}"
+          body: |
+            Publicación automática generada en cada push a `main`.
+            Incluye compilación de payment_nina y atm_nina.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
