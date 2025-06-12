@@ -22,13 +22,13 @@ jobs:
         run: |
           cd payment
           npm ci
-          npx compodoc -p tsconfig.json -d ../docs/payment --exportFormat html
+          npx @compodoc/compodoc -p tsconfig.json -d ../docs/payment
 
       - name: Install dependencies and generate docs (atm)
         run: |
           cd ../atm
           npm ci
-          npx compodoc -p tsconfig.json -d ../docs/atm --exportFormat html
+          npx @compodoc/compodoc -p tsconfig.json -d ../docs/atm
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
