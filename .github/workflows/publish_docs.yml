@@ -2,15 +2,15 @@ name: publish_docs pages
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
   build-docs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Node.js
@@ -22,13 +22,13 @@ jobs:
         run: |
           cd payment
           npm ci
-          npx @compodoc/compodoc -p tsconfig.build.json -d ../docs/payment
+          npx compodoc -p tsconfig.json -d ../docs/payment --exportFormat html
 
       - name: Install dependencies and generate docs (atm)
         run: |
           cd ../atm
           npm ci
-          npx @compodoc/compodoc -p tsconfig.build.json -d ../docs/atm
+          npx compodoc -p tsconfig.json -d ../docs/atm --exportFormat html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
