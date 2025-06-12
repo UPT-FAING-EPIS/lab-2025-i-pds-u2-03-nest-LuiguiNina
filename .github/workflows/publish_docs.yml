@@ -18,15 +18,15 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies and generate docs (payment)
+      - name: Generate docs for payment
         run: |
           cd payment
           npm ci
           npx @compodoc/compodoc -p tsconfig.json -d ../docs/payment
 
-      - name: Install dependencies and generate docs (atm)
+      - name: Generate docs for atm
         run: |
-          cd ../atm
+          cd $GITHUB_WORKSPACE/atm
           npm ci
           npx @compodoc/compodoc -p tsconfig.json -d ../docs/atm
 
