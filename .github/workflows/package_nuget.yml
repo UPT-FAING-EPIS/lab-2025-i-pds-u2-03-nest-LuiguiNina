@@ -1,0 +1,55 @@
+name: package_nuget
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-test-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: https://npm.pkg.github.com/
+
+      - name: Test payment
+        run: |
+          cd payment
+          npm ci
+          npm run test:cov
+
+      - name: Test atm
+        run: |
+          cd atm
+          npm ci
+          npm run test:cov
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectBaseDir: .
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Publish payment_nina to GitHub Packages
+        run: |
+          cd payment
+          npm version patch
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish atm_nina to GitHub Packages
+        run: |
+          cd atm
+          npm version patch
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
